@@ -1,0 +1,554 @@
+:root {
+    --bs-blue: #0d6efd;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #d63384;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #ffc107;
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-gray-100: #f8f9fa;
+    --bs-gray-200: #e9ecef;
+    --bs-gray-300: #dee2e6;
+    --bs-gray-400: #ced4da;
+    --bs-gray-500: #adb5bd;
+    --bs-gray-600: #6c757d;
+    --bs-gray-700: #495057;
+    --bs-gray-800: #343a40;
+    --bs-gray-900: #212529;
+    --bs-primary: #4681b3;
+    --bs-secondary: #6c757d;
+    --bs-success: #198754;
+    --bs-info: #0dcaf0;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+    --bs-primary-rgb: 13, 110, 253;
+    --bs-secondary-rgb: 108, 117, 125;
+    --bs-success-rgb: 25, 135, 84;
+    --bs-info-rgb: 13, 202, 240;
+    --bs-warning-rgb: 255, 193, 7;
+    --bs-danger-rgb: 220, 53, 69;
+    --bs-light-rgb: 248, 249, 250;
+    --bs-dark-rgb: 33, 37, 41;
+    --bs-white-rgb: 255, 255, 255;
+    --bs-black-rgb: 0, 0, 0;
+    --bs-body-rgb: 33, 37, 41;
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    --bs-body-font-family: var(--bs-font-sans-serif);
+    --bs-body-font-size: 1rem;
+    --bs-body-font-weight: 400;
+    --bs-body-line-height: 1.5;
+    --bs-body-color: #212529;
+    --bs-body-bg: #fff;
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /*margin-bottom: 60px;*/
+}
+
+header {
+    float: left;
+    width: 100%;
+}
+/*barra do header*/
+header {
+    background: #E6E7EE;
+    height: 80px;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    -webkit-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.15);
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.15);
+}
+
+    /*logo do header*/
+    header .branding {
+        float: left;
+        margin: 15px 15px;
+        height: 40px;
+    }
+
+
+    header nav .user {
+        float: right;
+        background: #565f64;
+        height: 80px;
+        position: relative;
+        cursor: pointer;
+        width: 220px;
+    }
+
+        header nav .user .info {
+            margin: 15px 15px 15px 30px;
+            position: relative;
+        }
+
+            header nav .user .info:after {
+                content: "\f107";
+                font-family: FontAwesome;
+                position: absolute;
+                right: 13px;
+                font-size: 12px;
+                color: #fff;
+                top: 10px;
+            }
+
+            header nav .user .info strong {
+                font-size: 14px;
+                line-height: 20px;
+                color: #fff;
+                float: left;
+                width: 100%;
+                margin-top: 6px;
+            }
+
+            header nav .user .info span {
+                font-size: 12px;
+                line-height: 18px;
+                float: left;
+                color: #fff;
+                width: 100%;
+            }
+
+        header nav .user.off .sub {
+            display: none;
+        }
+
+        header nav .user.on .sub {
+            display: block;
+        }
+
+        header nav .user .sub {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 100%;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            header nav .user .sub li {
+                float: left;
+                width: 100%;
+                margin-bottom: 1px;
+            }
+
+                header nav .user .sub li a {
+                    float: left;
+                    width: 100%;
+                    color: #fff;
+                    background: #565f64;
+                    line-height: 40px;
+                    text-align: left;
+                    padding: 0 20px;
+                }
+
+                    header nav .user .sub li a:hover {
+                        background: var(--bs-primary);
+                    }
+
+                    header nav .user .sub li a i {
+                        float: left;
+                        line-height: 40px;
+                        font-size: 18px;
+                        margin-right: 5px;
+                        width: 25px;
+                    }
+
+                    header nav .user .sub li a span {
+                        float: left;
+                        line-height: 40px;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                    }
+
+/*menu lateral*/
+aside {
+    background: var(--bs-primary);
+    width: 260px;
+    float: left;
+    position: absolute;
+    top: 80px;
+}
+
+.div-aside-menu {
+    position: fixed;
+    overflow-y: auto;
+    height: calc(100vh - 80px);
+    width: 270px;
+    z-index: 15;
+    background-color: var(--bs-primary);
+    padding: 20px 0px
+}
+/*-----------------------*/
+
+.miolo-menu {
+    width: calc(100% - 270px);
+    padding: 80px 5px 5px 0px;
+    float: right;
+}
+
+.menu-mobile {
+    display: none;
+}
+
+h3.title,
+h2.title {
+    color: var(--bs-primary);
+    font-weight: bold;
+    font-size: 14px;
+    padding: 0 20px;
+    float: left;
+    width: 100%;
+    border-top: 3px solid var(--bs-primary); /*#134c82*/
+    background: #f0f0f0;
+    /*height: 50px;*/
+    line-height: 30px;
+}
+
+table thead th {
+    background: #f0f0f0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ico-input-user, .ico-input-password {
+    font-style: normal;
+    font-family: "Font Awesome 6 Free";
+    font-weight: bold;
+}
+
+    .ico-input-user:before {
+        content: "\f007";
+    }
+
+    .ico-input-password:before {
+        content: "\f023";
+    }
+
+/* ----- Botoes na grid ---------*/
+.novo-grid-button, .editar-grid-button, .delete-grid-button, .selected-grid-button, .notselected-grid-button, .alert-grid-button {
+    font-style: normal;
+    cursor: pointer;
+    font-family: "Font Awesome 6 Free";
+    font-weight: bold;
+}
+
+    .novo-grid-button::before {
+        content: "\2b";
+    }
+
+    .editar-grid-button::before {
+        content: "\f044";
+    }
+
+    .delete-grid-button:before {
+        content: "\f2ed";
+        color: var(--bs-secondary);
+    }
+
+    .selected-grid-button:before {
+        content: "\f14a";
+        color: var(--bs-success);
+    }
+
+    .notselected-grid-button:before {
+        content: "\f14a";
+        font-weight: normal;
+        color: var(--bs-secondary);
+    }
+
+    .alert-grid-button:before {
+        content: "\f071";
+        color: var(--bs-warning);
+    }
+/*----------------------*/
+
+
+.div-espaco-comandos {
+    height: 125px;
+}
+
+button {
+    box-shadow: 2px 2px 2px #b2b2b2;
+}
+
+    button:hover {
+        border: 1px solid #b2b2b2;
+    }
+
+.btn-primary-custom {
+    color: #fff;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+    .btn-primary-custom:hover {
+        color: var(--bs-primary);
+        background-color: #fff;
+        border-color: var(--bs-primary);
+    }
+
+.btn-secondary-custom {
+    color: #fff;
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+}
+
+    .btn-secondary-custom:hover {
+        color: var(--bs-secondary);
+        background-color: #fff;
+        border-color: var(--bs-secondary);
+    }
+
+.input-codigo {
+    flex: none !important;
+    width: 80px !important;
+}
+
+
+.login-background {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    background: url('../images/background.jpg') no-repeat center center;
+    background-color: #c7d5e7;
+    background-size: cover;
+    position: relative;
+}
+
+.login-middle {
+    width: 400px;
+    margin: auto;
+    border-radius: 20px;
+    background: #E6E7EE;
+    /*border: 1px solid;*/
+    padding: 40px 50px 35px;
+}
+
+/* ------- Dashboard home ------- */
+.home-dash-top > label,
+.home-dash-resumo > label {
+    text-align: center;
+    padding: 10px;
+    border: solid 2px transparent;
+}
+
+    .home-dash-top > label > div,
+    .home-dash-resumo > label > div {
+        padding: 5px;
+        width: 100%;
+        float: left;
+        text-align: left;
+        background-color: rgba(255,255,255,0.9);
+    }
+
+    .home-dash-top > label > div {
+        box-shadow: 2px 4px 7px #B2B2B2;
+    }
+
+.home-dash-top .dash-icon-bkg {
+    font-size: 70px;
+    color: #F1F1F1;
+    border-radius: 20px;
+    padding: 5px 15px
+}
+
+.home-dash-top .title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 25px;
+    z-index: 1;
+}
+
+.home-dash-top .counter {
+    color: var(--bs-dark);
+    font-size: 50px;
+    z-index: 1;
+}
+/* -------------------------------- */
+
+
+@media (max-width: 991px) {
+    .miolo .info label.date {
+        margin-top: 10px;
+    }
+
+    aside, .div-aside-menu {
+        width: 200px;
+    }
+
+    .miolo {
+        width: calc(100% - 190px);
+    }
+}
+
+@media (max-width: 680px) {
+    header {
+        height: 45px;
+    }
+
+        header .branding img {
+            height: 25px;
+            width: 200px;
+        }
+
+        header .branding {
+            margin: 10px 10px;
+            height: 25px;
+        }
+
+        header nav .user {
+            height: 45px;
+            width: 55px;
+        }
+
+            header nav .user .info {
+                display: none;
+            }
+
+            header nav .user .sub li a span {
+                display: none;
+            }
+
+    aside {
+        top: 45px;
+    }
+
+    .miolo {
+        padding-top: 45px;
+    }
+
+    .div-aside-menu {
+        height: calc(100vh - 45px);
+    }
+
+    .div-espaco-comandos {
+        height: 115px;
+    }
+}
+
+@media (max-width: 550px) {
+    .miolo {
+        width: 100%;
+        position: relative;
+    }
+
+    .menu-mobile {
+        display: block;
+        float: right;
+        background: transparent;
+        border: 0;
+        font-size: 22px;
+        color: var(--bs-primary);
+        margin: 0 10px 0 0;
+        line-height: 45px;
+        background: rgba(255,255,255,0.5);
+        width: 50px;
+        text-align: center;
+    }
+
+    .menu-closed .menu-mobile i:before {
+        color: var(--bs-primary);
+    }
+
+    .menu-closed aside {
+        display: none;
+    }
+
+    .menu-open aside {
+        display: block;
+    }
+
+    .menu-open .menu-mobile {
+        background: var(--bs-primary);
+        color: #fff;
+    }
+
+        .menu-open .menu-mobile i:before {
+            color: #fff;
+        }
+
+    aside {
+        width: 100%;
+        position: relative;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+
+    .div-aside-menu {
+        height: 100%;
+        width: 100%;
+        padding: 0px;
+        position: relative;
+    }
+
+    .miolo-menu {
+        padding: 45px 0px 0px 0px;
+    }
+
+    .div-comandos {
+        width: 100%;
+        position: absolute;
+        z-index: 10;
+    }
+}
+
+
+
+@media (max-width: 380px) {
+    header nav > ul > li > a, header nav > ul > li {
+        width: 45px;
+    }
+
+    .menu-mobile {
+        width: 40px;
+        margin-right: 6px;
+    }
+
+    header nav > ul > li {
+        margin-right: 6px;
+    }
+
+    header .branding {
+        margin: 10px;
+        height: 35px;
+        width: 35px;
+        overflow: hidden;
+    }
+
+        header .branding img {
+            height: 35px;
+        }
+}

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalMVCCore.Web", "PortalMVCCore.Web\PortalMVCCore.Web.csproj", "{2EEB6B6E-D32D-4650-AAEA-E339005C1643}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortalMVCCore.DAL", "PortalMVCCore.DAL\PortalMVCCore.DAL.csproj", "{C4E6FB14-1025-4AFA-A2D8-F7E3F74C72B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EEB6B6E-D32D-4650-AAEA-E339005C1643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EEB6B6E-D32D-4650-AAEA-E339005C1643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EEB6B6E-D32D-4650-AAEA-E339005C1643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EEB6B6E-D32D-4650-AAEA-E339005C1643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4E6FB14-1025-4AFA-A2D8-F7E3F74C72B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4E6FB14-1025-4AFA-A2D8-F7E3F74C72B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4E6FB14-1025-4AFA-A2D8-F7E3F74C72B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4E6FB14-1025-4AFA-A2D8-F7E3F74C72B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7BAF14D9-F347-4993-BF26-7DAC67E38A06}
+	EndGlobalSection
+EndGlobal
