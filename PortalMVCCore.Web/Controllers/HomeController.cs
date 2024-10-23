@@ -1,16 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
-using PortalMVCCore.Web.Models;
-using System.Diagnostics;
+using PortalMVCCore.DAL.Entities;
+using PortalMVCCore.DAL.Repositories.Interfaces;
 
 namespace PortalMVCCore.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private IHomeRepository _homeRepository;
+        private IUsuariosRepository _usuariosRepository;
+        private IProgramasRepository _programasRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IHomeRepository homeRepository, IUsuariosRepository usuariosRepository, IProgramasRepository programasRepository)
         {
-            _logger = logger;
+            _homeRepository = homeRepository;
+            _usuariosRepository = usuariosRepository;
+            _programasRepository = programasRepository;
         }
 
         public IActionResult Index()
@@ -18,15 +22,46 @@ namespace PortalMVCCore.Web.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public class DadosHeader
         {
-            return View();
+            public string? IdUsuario { get; set; }
+            public string? Usuario { get; set; }
+            public string? Empresa { get; set; }
+            public string? NomeController { get; set; }
+            public string? DescricaoController { get; set; }
+            public int IdTipoLogin { get; set; }
+            public int IntervNotific { get; set; }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult GetDadosHeader(string NomeController = "")
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            DadosHeader Dados = new DadosHeader();
+            int.TryParse(User.FindFirst("IdUsuario")?.Value, out int IdUsuario);
+            int.TryParse(User.FindFirst("IdTipoLogin")?.Value, out int IdTipoLogin);
+
+            Dados.IdUsuario = IdUsuario.ToString();
+            Dados.Usuario = "";
+
+            USUARIOS_TAB usuarios_tab = _usuariosRepository.Find(IdUsuario);
+
+            if (usuarios_tab != null)
+                Dados.Usuario = usuarios_tab.NOME.Count() <= 26 ? usuarios_tab.NOME : usuarios_tab.NOME.Substring(0, 26);
+
+            PROGRAMAS_TAB programas_tab = _programasRepository.GetAll(p => p.NOME_CONTROLLER == NomeController).FirstOrDefault();
+            Dados.DescricaoController = programas_tab != null ? programas_tab.DESCRICAO : "";
+
+            Dados.IdTipoLogin = IdTipoLogin;
+
+            return Json(Dados);
+        }
+
+        public IActionResult GetDashboard()
+        {
+            int.TryParse(User.FindFirst("IdUsuario")?.Value, out int IdUsuario);
+            int.TryParse(User.FindFirst("CodEmpresa")?.Value, out int CodEmpresa);
+            int.TryParse(User.FindFirst("IdTipoLogin")?.Value, out int IdTipoLogin);
+
+            return Json(_homeRepository.GetDashBoard(IdUsuario, CodEmpresa, IdTipoLogin));
         }
     }
 }
