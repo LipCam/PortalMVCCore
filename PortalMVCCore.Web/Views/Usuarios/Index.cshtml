@@ -1,0 +1,45 @@
+﻿<script>
+    var Mensagem = "@ViewBag.Mensagem";
+
+    $(document).ready(function(){
+        if (Mensagem != "")
+            OnAlertLobibox(3, "", Mensagem);
+    })
+
+    function OnNovo() {
+        OnLoadingPanel(true, "");
+        var UrlNovo = '@Url.Action("frmUsuarios")';
+        document.location = UrlNovo;
+    }
+
+    function OnEdit(Id) {
+        OnLoadingPanel(true, "");
+        var UrlEdit = '@Url.Action("frmUsuarios", new { Id = "-id-" })';
+        document.location = UrlEdit.replace("-id-", Id);
+    }
+
+    function OnDelete(Id) {
+        OnConfirmLobibox("Deseja excluir este registro?",
+            function () {
+                OnLoadingPanel(true, "");
+                $.ajax({
+                    url: '@Url.Action("Delete")',
+                    data: { Id: Id },
+                    success: function (result) {
+                        OnLoad_grUsuariosPartial();
+                        OnLoadingPanel(false, "");
+                    }
+                })
+            }, null);
+    }
+</script>
+
+<script src="/Views/Usuarios/_grUsuariosPartial.js"></script>
+
+<div class="bg-light ps-5 pt-3 pb-2 border-bottom border-2">
+    <h2 id="lblDescricaoController"></h2>
+</div>
+<div class="m-3">
+    <table id="grUsuariosPartial"></table>
+    <div id="pager"></div>
+</div>
