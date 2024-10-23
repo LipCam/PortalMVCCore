@@ -3,47 +3,227 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PortalMVCCore.Web</title>
+    <title>Portal MVC Core</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PortalMVCCore.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PortalMVCCore.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - PortalMVCCore.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/value-utils.js"></script>
+
+    <script src="https://kit.fontawesome.com/9085e3ff95.js" crossorigin="anonymous"></script>
+
+    @* Loading Panel(jquery.blockUI) *@
+    <script src="~/lib/jquery.blockUI/jquery.blockUI.js"></script>
+    <script src="~/js/loading-panel.js"></script>
+    @* ------------- *@
+
+    @* Alert(lobibox-master) *@
+    <link rel="stylesheet" href="~/lib/lobibox-master/css/lobibox.min.css" />
+    <script src="~/lib/lobibox-master/js/lobibox.js"></script>
+    <script src="~/js/alert-lobibox.js"></script>
+    @* ------------- *@
+
+    @* JqGrid *@
+    <link rel="stylesheet" type="text/css" href="~/lib/jqGrid-master/css/ui.jqgrid.css" />
+    <script src="~/lib/jqGrid-master/js/jquery.jqgrid.min.js"></script>
+    @* ------------- *@
+
+    @* JqUI *@
+    <link href="~/lib/jquery-ui-1.13.3.custom/jquery-ui-custom.css" rel="Stylesheet" type="text/css" />
+    <script type="text/javascript" src="~/lib/jquery-ui-1.13.3.custom/jquery-ui.js"></script>
+    @* ------------- *@
+
+    <script src="~/lib/jquery.mask.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/lib/jquery.fileupload.js"></script>
+
+    @* smartmenus *@
+    <link rel="stylesheet" type="text/css" href="~/lib/smartmenus-1.1.1/css/sm-core-css.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/smartmenus-1.1.1/css/sm-custom/sm-custom.css" />
+    <script src="~/lib/smartmenus-1.1.1/jquery.smartmenus.js"></script>
+    @* ------------- *@
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            OnGetDadosHeader('@ViewContext.RouteData.Values["Controller"]');
+        })
+    </script>
+
+    <section class="full-area menu-closed">
+        <header>
+            <div class="branding">
+                <img src="~/images/logo-empresa.png" height="50" width="245" alt="Portal MVC Core" />
+            </div>
+            <nav>
+                <div class="user off">
+                    <div class="info">
+                        <strong id="strUsuario">
+                            <div class="text-ellipsis">
+                                <span id="spUsuario" style="font-size:15px;"></span>
+                            </div>
+                            <span id="spUsuariopqn"></span>
+                        </strong>
+                    </div>
+                    <ul class="sub">
+                        <li>
+                            <a title="Alterar senha" onclick="OnShowWinAlterarSenha()">
+                                <i class="fa fa-lock" aria-hidden="true"></i> <span>Alterar senha</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Sair" onclick="OnLogout()">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i> <span>Sair</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="menu-mobile">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </button>
+            </nav>
+        </header>
+
+        <aside>
+            <div class="div-aside-menu">
+                <ul id="main-menu" class="sm sm-vertical sm-custom">
+                    <li>
+                        <a asp-controller="Home" asp-action="Index" class="menu-main-group">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            <span>
+                                Home
+                            </span>
+                        </a>
+                    </li>
+
+                    <li id="grmAreaAcesso" style="display:none;">
+                        <a href="#" class="menu-main-group">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                            <span>
+                                Administração
+                            </span>
+                        </a>
+                        <ul>
+                            <li id="atmFtp" style="display:block;">
+                                <a asp-controller="Ftp" asp-action="Index" class="sidebar-link" title="Servidores FTP">Servidores FTP</a>
+                            </li>
+                            <li id="atmUsuarios" style="display:block;">
+                                <a asp-controller="Usuarios" asp-action="Index" class="sidebar-link" title="Usuários">Usuários</a>
+                            </li>
+                            <li id="atmEmpresas" style="display:block;">
+                                <a asp-controller="Empresas" asp-action="Index" class="sidebar-link" title="Clientes">Clientes</a>
+                            </li>
+                            <li id="atmRotas" style="display:block;">
+                                <a asp-controller="Rotas" asp-action="Index" class="sidebar-link" title="Rotas">Rotas</a>
+                            </li>
+                            <li id="atmImportArqMedidores" style="display:block;">
+                                <a asp-controller="ImportArqMedidores" asp-action="Index" class="sidebar-link" title="Importar Medidores">Importar Medidores</a>
+                            </li>
+                            <li id="atmImportArqRotas" style="display:block;">
+                                <a asp-controller="ImportArqRotas" asp-action="Index" class="sidebar-link" title="Importar Rotas">Importar Rotas</a>
+                            </li>
+                            <li id="atmLeiturasMultiplas" style="display:block;">
+                                <a asp-controller="LeiturasMultiplas" asp-action="Index" class="sidebar-link" title="Leituras Multiplas">Leituras Multiplas</a>
+                            </li>
+                            <li id="atmFaixasCobranca" style="display:block;">
+                                <a asp-controller="FaixasCobranca" asp-action="Index" class="sidebar-link" title="Faixas Cobrança">Faixas Cobrança</a>
+                            </li>
+                            <li id="atmCalculaMedicoes" style="display:block;">
+                                <a asp-controller="CalculaMedicoes" asp-action="Index" class="sidebar-link" title="Calcular Medições">Calcular Medições</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li id="grmCadastro" style="display:none;">
+                        <a href="#" class="menu-main-group">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <span>
+                                Cadastros
+                            </span>
+                        </a>
+                        <ul>
+                            <li id="atmConsumidores" style="display:block;">
+                                <a asp-controller="Consumidores" asp-action="Index" class="sidebar-link" title="Consumidores">Consumidores</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li id="grmEquipamentos" style="display:none;">
+                        <a href="#" class="menu-main-group">
+                            <i class="fa fa-tachometer" aria-hidden="true"></i>
+                            <span>
+                                Equipamentos
+                            </span>
+                        </a>
+                        <ul>
+                            <li id="atmConcentradores" style="display:block;">
+                                <a asp-controller="Concentradores" asp-action="Index" class="sidebar-link" title="Concentradores">Concentradores</a>
+                            </li>
+                            <li id="atmMedidores" style="display:block;">
+                                <a asp-controller="Medidores" asp-action="Index" class="sidebar-link" title="Medidores">Medidores</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    @* <li id="grmGraficos" style="display:block;">
+                        <a href="#" class="menu-main-group">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i>
+                            <span>
+                                Gráficos
+                            </span>
+                        </a>
+                        <ul>
+                            <li id="atmChartConsumo" style="display:block;">
+                                <a asp-controller="ChartConsumo" asp-action="Index" class="sidebar-link" title="Consumo">Consumo</a>
+                            </li>
+                            <li id="atmChartCompare" style="display:block;">
+                                <a asp-controller="ChartCompare" asp-action="Index" class="sidebar-link" title="Comparativo de consumo">Comparativo de consumo</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li id="grmRelatorios" style="display:block;">
+                        <a href="#" class="menu-main-group">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <span>
+                                Relatórios
+                            </span>
+                        </a>
+                        <ul>
+                            <li id="atmRelIndice" style="display:block;">
+                                <a asp-controller="RelIndice" asp-action="Index" class="sidebar-link" title="Índice">Índice</a>
+                            </li>
+                            <li id="atmRelConsumoDet" style="display:block;">
+                                <a asp-controller="RelConsumoDet" asp-action="Index" class="sidebar-link" title="Consumo - Detalhe">Consumo - Detalhe</a>
+                            </li>
+                        </ul>
+                    </li> *@
+                </ul>
+                <footer>
+                    <div class="p-3 text-center text-white">2024. Portal MVC Core - Todos os direitos reservados. Versão: 1.0</div>
+                </footer>
+            </div>
+        </aside>
+        <div class="miolo miolo-menu">
+            @RenderBody()
+        </div>
+    </section>
+
+    <script>
+        // Apenas para não dar alerta nos campos decimais por conta do formato pt-br ao dar lostfocus
+        // Tem q ser colocado no final da pagina
+        $("#frm").validate({
+        });
+    </script>
 </body>
+
 </html>
