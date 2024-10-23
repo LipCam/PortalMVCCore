@@ -3,6 +3,7 @@ using PortalMVCCore.DAL.DB;
 using PortalMVCCore.DAL.Repositories.Interfaces;
 using PortalMVCCore.DAL.Repositories;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace PortalMVCCore.Web
 {
@@ -22,11 +23,27 @@ namespace PortalMVCCore.Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            //Autenticação
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Login";
+                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+            });
+
             //faz com que o retorno json das querys venhan com o nome dos campos de acordo com o case formado
             builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Tempo de expiração da sessão
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true; // Tornar o cookie essencial para o funcionamento do site
             });
 
             var app = builder.Build();
@@ -52,6 +69,12 @@ namespace PortalMVCCore.Web
             });
 
             app.UseRouting();
+
+            // Ativar sessão antes de UseEndpoints
+            app.UseSession();
+
+            //Autenticação
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

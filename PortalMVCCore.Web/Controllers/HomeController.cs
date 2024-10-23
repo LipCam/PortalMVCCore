@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PortalMVCCore.DAL.Entities;
 using PortalMVCCore.DAL.Repositories.Interfaces;
 
 namespace PortalMVCCore.Web.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private IHomeRepository _homeRepository;
