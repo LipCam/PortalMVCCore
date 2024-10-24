@@ -475,7 +475,8 @@ button.ui-button::-moz-focus-inner {
 .ui-dialog .ui-dialog-titlebar {
 	padding: .4em 1em;
 	position: relative;
-    border-top: 3px solid #4681b3;
+    /*border-top: 3px solid #4681b3;*/
+	border-top: 3px solid #00a69c;
 }
 .ui-dialog .ui-dialog-title {
 	float: left;
@@ -743,7 +744,8 @@ button.ui-button::-moz-focus-inner {
 	padding: .2em .2em 0;
     background-color: transparent !important;
     padding: 0 !important;
-    border-bottom: 2px solid #4681b3;
+	border-bottom: 2px solid #00a69c;
+    /*border-bottom: 2px solid #4681b3;	*/
 }
 .ui-tabs .ui-tabs-nav li {
 	list-style: none;
@@ -819,13 +821,14 @@ body .ui-tooltip {
 .ui-widget-header {
 	/*border: 1px solid #4297d7;*/
 	/*background: #5c9ccc url("images/ui-bg_gloss-wave_55_5c9ccc_500x100.png") 50% 50% repeat-x;*/
-    border-bottom: 1px solid #dfdfdf;
-    /*border-top: 3px solid #4681b3;*/
-    color: #4681b3;
-    font-weight: bold;
-    background-color: #f0f0f0;
-    font-size: 20px;
-    padding: 5px 20px !important;
+	border-bottom: 1px solid #dfdfdf;
+	/*border-top: 3px solid #4681b3;*/
+	color: #00a69c;
+	/*color: #4681b3;*/
+	font-weight: bold;
+	background-color: #f0f0f0;
+	font-size: 20px;
+	padding: 5px 20px !important;
 }
 .ui-widget-header a {
 	color: #ffffff;
@@ -846,9 +849,9 @@ body .ui-tooltip {
 .ui-widget-header .ui-state-default {
 	border: 1px solid #dfdfdf;
 	/*background: #dfeffc url("images/ui-bg_glass_85_dfeffc_1x400.png") 50% 50% repeat-x;*/
-    background: #f0f0f0;
+	background: #f0f0f0;
 	font-weight: bold;
-	color: #2e6e9e;
+	color: #00a69c /*#2e6e9e*/;
 }
 .ui-state-default a,
 .ui-state-default a:link,
@@ -883,8 +886,10 @@ body .ui-tooltip {
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-	border: 1px solid #4681b3;
-    background: #4681b3;
+	border: 1px solid #00a69c;
+	background: #00a69c;
+	/*border: 1px solid #4681b3;
+    background: #4681b3;*/
 	/*background: #f5f8f9 url("images/ui-bg_inset-hard_100_f5f8f9_1x100.png") 50% 50% repeat-x;*/
 	font-weight: bold;
 	color: #e17009;
@@ -976,7 +981,7 @@ body .ui-tooltip {
 	background-image: url("images/ui-icons_d8e7f3_256x240.png");
 }
 .ui-state-default .ui-icon {
-	background-image: url("images/ui-icons_6da8d5_256x240.png");
+	/*background-image: url("images/ui-icons_6da8d5_256x240.png");*/
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
