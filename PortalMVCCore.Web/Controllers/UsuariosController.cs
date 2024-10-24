@@ -59,13 +59,13 @@ namespace PortalMVCCore.Web.Controllers
         {
             if (Id == 0)
             {
-                usuarios_tab.COD_USUARIO = _repository.GetAll().Count() > 0 ? _repository.GetAll().Max(p => p.COD_USUARIO) + 1 : 1;
+                usuarios_tab.ID_USUARIO = _repository.GetAll().Count() > 0 ? _repository.GetAll().Max(p => p.ID_USUARIO) + 1 : 1;
                 _repository.Add(usuarios_tab);
             }
             else
                 _repository.Update(usuarios_tab);
 
-            Id = usuarios_tab.COD_USUARIO;
+            Id = usuarios_tab.ID_USUARIO;
             if (NovoReg)
                 Id = 0;
 

@@ -19,6 +19,7 @@ namespace PortalMVCCore.Web
             builder.Services.AddScoped<IHomeRepository, HomeRepository>();
             builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
             builder.Services.AddScoped<IProgramasRepository, ProgramasRepository>();
+            builder.Services.AddScoped<IClientesRepository, ClientesRepository>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

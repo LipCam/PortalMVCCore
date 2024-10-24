@@ -1,0 +1,38 @@
+﻿<script>
+    function OnNovo() {
+        OnLoadingPanel(true, "");
+        var UrlNovo = '@Url.Action("frmClientes")';
+        document.location = UrlNovo;
+    }
+
+    function OnEdit(Id) {
+        OnLoadingPanel(true, "");
+        var UrlEdit = '@Url.Action("frmClientes", new { Id = "-id-" })';
+        document.location = UrlEdit.replace("-id-", Id);
+    }
+
+    function OnDelete(Id) {
+        OnConfirmLobibox("Deseja excluir este registro?",
+            function () {
+                OnLoadingPanel(true, "");
+                $.ajax({
+                    url: '@Url.Action("Delete")',
+                    data: { Id: Id },
+                    success: function (result) {
+                        OnLoad_grClientesPartial();
+                        OnLoadingPanel(false, "");
+                    }
+                })
+            }, null);
+    }
+</script>
+
+<script src="/Views/Clientes/_grClientesPartial.js"></script>
+
+<div class="bg-light ps-5 pt-3 pb-2 border-bottom border-2">
+    <h2 id="lblDescricaoController"></h2>
+</div>
+<div class="m-3">
+    <table id="grClientesPartial"></table>
+    <div id="pager"></div>
+</div>

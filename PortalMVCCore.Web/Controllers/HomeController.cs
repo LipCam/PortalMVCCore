@@ -59,11 +59,7 @@ namespace PortalMVCCore.Web.Controllers
 
         public IActionResult GetDashboard()
         {
-            int.TryParse(User.FindFirst("IdUsuario")?.Value, out int IdUsuario);
-            int.TryParse(User.FindFirst("CodEmpresa")?.Value, out int CodEmpresa);
-            int.TryParse(User.FindFirst("IdTipoLogin")?.Value, out int IdTipoLogin);
-
-            return Json(_homeRepository.GetDashBoard(IdUsuario, CodEmpresa, IdTipoLogin));
+            return Json(_homeRepository.GetDashBoard());
         }
     }
 }

@@ -21,11 +21,11 @@ $(document).ready(function () {
         height: 550,
         colNames: ["Código", "Nome", "Usuário", "", "<i class='novo-grid-button' onclick='OnNovo()'></i>"],
         colModel: [
-            { name: 'COD_USUARIO', width: 100, fixed: true },
+            { name: 'ID_USUARIO', width: 100, fixed: true },
             { name: 'NOME', width: 300 },
             { name: 'USUARIO', width: 300 },
-            { name: 'btnEdit', width: 40, sortable: false, fixed: true, formatter: function (e, s, item) { return "<div class='text-center'><i class='editar-grid-button' onclick='OnEdit(" + item.COD_USUARIO + ")'></i></div>"; } },
-            { name: 'btnDelete', width: 40, sortable: false, fixed: true, formatter: function (e, s, item) { return "<div class='text-center'><i class='delete-grid-button' onclick='OnDelete(" + item.COD_USUARIO + ")'></i></div>"; } }
+            { name: 'btnEdit', width: 40, sortable: false, fixed: true, formatter: function (e, s, item) { return "<div class='text-center'><i class='editar-grid-button' onclick='OnEdit(" + item.ID_USUARIO + ")'></i></div>"; } },
+            { name: 'btnDelete', width: 40, sortable: false, fixed: true, formatter: function (e, s, item) { return "<div class='text-center'><i class='delete-grid-button' onclick='OnDelete(" + item.ID_USUARIO + ")'></i></div>"; } }
         ],
         loadComplete: function (result) {
             IdsGrid = $(this).getDataIDs();
@@ -33,16 +33,16 @@ $(document).ready(function () {
         },
         ondblClickRow: function (id) {
             var Row = $(this).getLocalRow(id);
-            OnEdit(Row.COD_USUARIO);
+            OnEdit(Row.ID_USUARIO);
         },
     }).jqGrid('bindKeys', {
         onEnter: function (id) {
             var Row = $(this).getLocalRow(id);
-            OnEdit(Row.COD_USUARIO);
+            OnEdit(Row.ID_USUARIO);
         },
         onDelete: function (id) {
             var Row = $(this).getLocalRow(id);
-            OnDelete(Row.COD_USUARIO);
+            OnDelete(Row.ID_USUARIO);
         },
         scrollingRows: true
     }).jqGrid('filterToolbar', {

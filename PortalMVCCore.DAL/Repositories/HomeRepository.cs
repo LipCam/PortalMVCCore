@@ -1,8 +1,7 @@
-﻿using PortalMVCCore.DAL.DB;
+﻿using Microsoft.Extensions.Configuration;
+using PortalMVCCore.DAL.DB;
 using PortalMVCCore.DAL.DTOs;
 using PortalMVCCore.DAL.Repositories.Interfaces;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using System.Data;
 
 namespace PortalMVCCore.DAL.Repositories
@@ -16,18 +15,12 @@ namespace PortalMVCCore.DAL.Repositories
             _configuration = configuration;
         }
 
-        public List<DadosDashBoardDTO> GetDashBoard(int IdUsuario, int CodEmpresa, int IdTipoLogin)
+        public List<DadosDashBoardDTO> GetDashBoard()
         {
             string Erro = "";
-            string SQL = @"DASH_BOARD_HOME_PRC @COD_USUARIO, @COD_EMPRESA, @ID_TIPO_LOGIN";
-            List<SqlParameter> lst = new List<SqlParameter>()
-            {
-                new SqlParameter { ParameterName = "@COD_USUARIO", SqlDbType = SqlDbType.Int, Value = IdUsuario },
-                new SqlParameter { ParameterName = "@COD_EMPRESA", SqlDbType = SqlDbType.Int, Value = CodEmpresa },
-                new SqlParameter { ParameterName = "@ID_TIPO_LOGIN", SqlDbType = SqlDbType.Int, Value = IdTipoLogin },
-            };
+            string SQL = @"EXEC DASH_BOARD_HOME_PRC";
 
-            DataTable dt = new ExecuteQuery(_configuration).ExecQueryDT(SQL, lst, out Erro);
+            DataTable dt = new ExecuteQuery(_configuration).ExecQueryDT(SQL, null, out Erro);
 
             List<DadosDashBoardDTO> lstDadosDashBoardDTO = new List<DadosDashBoardDTO>();
             foreach (DataRow row in dt.Rows)

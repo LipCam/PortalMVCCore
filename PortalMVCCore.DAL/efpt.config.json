@@ -15,7 +15,7 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[PROGRAMAS_TAB]",
+         "Name": "[dbo].[CLIENTES_CONTATOS_TAB]",
          "ObjectType": 0
       }
    ],

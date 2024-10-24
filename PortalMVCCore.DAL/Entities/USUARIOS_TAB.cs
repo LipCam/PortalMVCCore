@@ -8,7 +8,7 @@ namespace PortalMVCCore.DAL.Entities;
 public partial class USUARIOS_TAB
 {
     [Key]
-    public int COD_USUARIO { get; set; }
+    public int ID_USUARIO { get; set; }
 
     [StringLength(50)]
     [Unicode(false)]

@@ -55,7 +55,7 @@ namespace PortalMVCCore.Controllers
                 {
                     List<Claim> claims = new List<Claim>()
                     {
-                        new Claim("IdUsuario", usuarios_tab.COD_USUARIO.ToString()),
+                        new Claim("IdUsuario", usuarios_tab.ID_USUARIO.ToString()),
                         new Claim("CodEmpresa", "0"),
                         new Claim("IdTipoLogin", IdTipoLogin.ToString()),
                     };

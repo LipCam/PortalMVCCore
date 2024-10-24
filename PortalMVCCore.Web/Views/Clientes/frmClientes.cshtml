@@ -1,0 +1,523 @@
+﻿@model PortalMVCCore.DAL.Entities.Clientes.CLIENTES_TAB
+
+<script>
+    var IdReg = "@ViewBag.Id";
+
+    $(document).ready(function () {
+        OnChange_TIPO_PESSOA();
+
+        $("#tbmClientes").tabs({
+            activate: function (e, ui) {
+                if (ui.newPanel.attr('id') == "tbDadosBasicos") {
+                   OnResize_grClientesEnderecosPartial();
+                }
+                if (ui.newPanel.attr('id') == "tbContatos") {
+                    OnResize_grClientesContatosPartial();
+                }
+            }
+        });
+
+        // if('@ViewBag.Salvo' == "True")
+        //     OnNotifyLobibox(1, "", "Salvo com sucesso", null);        
+    })
+
+    function OnVoltar() {
+        OnLoadingPanel(true, "");
+        document.location = '@Url.Action("Index")';
+    }
+
+    function OnNovo() {
+        OnConfirmLobibox("Deseja salvar as alterações?",
+            function () {
+                OnSubmit(true);
+            },
+            function () {
+                OnLoadingPanel(true, "");
+                document.location = '@Url.Action(ViewContext.RouteData.Values["Action"].ToString(), new { Id = 0 })';
+            });
+    }
+
+    function OnSubmit(Novo) {
+        OnLimpaValidacoesForm($("#frm"));
+        var FrmValid = true;
+
+        if ($("#NOME").val() == "") {
+            $("span[data-valmsg-for='NOME']").text("Campo obrigatório");
+            $("#NOME").addClass("is-invalid");
+            FrmValid = false;
+        }
+        
+        if (FrmValid) {
+            OnLoadingPanel(true, "");
+            $("#NovoReg").val(Novo);
+            frm.submit();
+        }
+        else
+            OnNotifyLobibox(3, "", "Há campos obrigatórios a serem preenchidos");
+    }
+
+    function OnDelete() {
+        OnConfirmLobibox("Deseja excluir este registro?",
+            function () {
+                OnLoadingPanel(true, "");
+                $.ajax({
+                    url: '@Url.Action("Delete")',
+                    data: { Id: @ViewBag.Id },
+                    success: function (result) {
+                        document.location = '@Url.Action("Index")';
+                    }
+                })
+            }, null);
+    }
+
+    function OnChange_TIPO_PESSOA() {
+        $("#divCPF").hide();
+        $("#divCNPJ").hide();
+
+        if ($("#TIPO_PESSOA").val() == 1) {
+            $("#divCPF").show();
+            $("#divCNPJ").val(null);
+        }
+        else {
+            $("#divCNPJ").show();
+            $("#divCPF").val(null);
+        }
+    }
+</script>
+
+<script src="/Views/Clientes/_grClientesEnderecosPartial.js"></script>
+<script src="/Views/Clientes/_grClientesContatosPartial.js"></script>
+
+<div class="bg-light pt-3 ps-4 border-bottom border-2 position-fixed w-100" style="z-index: 10;">
+    <h5 id="lblDescricaoController"></h5>
+    <div class="mb-3">
+        <button type="button" onclick="OnVoltar()" class="btn btn-sm btn-white me-2">
+            <i class="fa fa-arrow-left fa-2x"></i><br>
+            Voltar
+        </button>
+        <button type="button" onclick="OnNovo()" class="btn btn-sm btn-white me-2">
+            <i class="fa fa-plus fa-2x text-primary"></i><br>
+            Novo
+        </button>
+        <button type="button" onclick="OnSubmit(false)" class="btn btn-sm btn-white me-2">
+            <i class="fa fa-check fa-2x text-success"></i><br>
+            Salvar
+        </button>
+
+        @if (@ViewBag.Id > 0)
+        {
+            <button type="button" onclick="OnDelete()" class="btn btn-sm btn-white me-2">
+                <i class="fa fa-trash fa-2x text-danger"></i><br>
+                Excluir
+            </button>
+        }
+    </div>
+</div>
+
+<div class="div-espaco-comandos"></div>
+
+<form asp-action="frmClientes" id="frm" method="post" class="form-horizontal">
+    <div class="p-2 bg-light">
+        <input type="hidden" name="Id" value="@ViewBag.Id" />
+        <input type="hidden" name="NovoReg" id="NovoReg" />
+
+        <div id="tbmClientes" class="mt-1">
+            <ul>
+                <li><a href="#tbDadosBasicos">Dados Básicos</a></li>
+                @if (@ViewBag.Id > 0)
+                {
+                    <li><a href="#tbContatos">Contatos</a></li>
+                }
+            </ul>
+
+            <div id="tbDadosBasicos">
+                <div class="row ms-2 mb-4">
+                    <div class="row mt-3">
+                        <div class="form-group col-lg-2 col-md-2">
+                            <label asp-for="ID_CLIENTE" class="control-label">Código</label>
+                            <input asp-for="ID_CLIENTE" class="form-control form-control-sm" readonly data-val="false" />
+                            <span asp-validation-for="ID_CLIENTE" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-10">
+                            <label asp-for="NOME" class="control-label">Nome</label>
+                            <input asp-for="NOME" class="form-control form-control-sm" />
+                            <span asp-validation-for="NOME" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-12">
+                            <label asp-for="FANTASIA" class="control-label">Fantasia</label>
+                            <input asp-for="FANTASIA" class="form-control form-control-sm" />
+                            <span asp-validation-for="FANTASIA" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-6">
+                            <label asp-for="TIPO_PESSOA" class="control-label">Tipo</label>
+                            @Html.DropDownList("TIPO_PESSOA", null, new { @class = "form-control form-select-sm form-select", @onchange = "OnChange_TIPO_PESSOA()" })
+                            <span asp-validation-for="TIPO_PESSOA" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6" id="divCPF">
+                            <label asp-for="CPF" class="control-label">CPF</label>
+                            <input asp-for="CPF" class="form-control form-control-sm cpf-field" data-val="true" />
+                            <span asp-validation-for="CPF" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6" id="divCNPJ">
+                            <label asp-for="CNPJ" class="control-label">CNPJ</label>
+                            <input asp-for="CNPJ" class="form-control form-control-sm cnpj-field" data-val="true" />
+                            <span asp-validation-for="CNPJ" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-10">
+                            <label asp-for="FONE" class="control-label">Fone</label>
+                            <input asp-for="FONE" class="form-control form-control-sm" />
+                            <span asp-validation-for="FONE" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-2">
+                            <label asp-for="CELULAR" class="control-label">Celular</label>
+                            <input asp-for="CELULAR" class="form-control form-control-sm" />
+                            <span asp-validation-for="CELULAR" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                @if (@ViewBag.Id > 0)
+                {
+                    <div class="row m-2 mb-4">
+                        <h2 class="title">
+                            Endereços
+                        </h2>
+                        <div>
+                            <table id="grClientesEnderecosPartial"></table>
+                            <div id="pagergrClientesEnderecosPartial"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (@ViewBag.Id > 0)
+            {
+                <div id="tbContatos">
+                    <div class="row m-1 mb-4">
+                        <div>
+                            <table id="grClientesContatosPartial"></table>
+                            <div id="pagergrClientesContatosPartial"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</form>
+
+<script id="scWinAddEditEndereco">
+    var IdEnderecoSel = 0;
+    $(document).ready(function () {
+        $("#winAddEditEndereco").dialog({
+            autoOpen: false,
+            modal: true,
+            width: 500,
+            resizable: false,
+            draggable: false
+        });
+    })
+
+    function OnShowWinAddEditClienteEndereco(IdEndereco) {
+        IdEnderecoSel = IdEndereco;
+
+        if (IdEnderecoSel == 0) {
+            $("#txtEndereco").val("");
+            $("#txtNumero").val("");
+            $("#txtCompl").val("");
+            $("#txtBairro").val("");
+            $("#txtCidade").val("");
+            $("#txtUF").val("");
+            $("#txtCep").val("");
+            $("#winAddEditEndereco").dialog("open");
+        }
+        else {
+            OnLoadingPanel(true, "");
+            $.ajax({
+                url: '@Url.Action("GetClienteEndereco")',
+                data: { IdCliente: IdReg, IdEndereco: IdEnderecoSel },
+                success: function (result) {
+                    $("#txtEndereco").val("");
+                    $("#txtNumero").val("");
+                    $("#txtCompl").val("");
+                    $("#txtBairro").val("");
+                    $("#txtCidade").val("");
+                    //$("#UF").val("");
+                    $("#txtCep").val("");
+
+                    $(result).each(function () {
+                        $("#txtEndereco").val(this.ENDERECO);
+                        $("#txtNumero").val(this.NUMERO);
+                        $("#txtCompl").val(this.COMPL);
+                        $("#txtBairro").val(this.BAIRRO);
+                        $("#txtCidade").val(this.CIDADE);
+                        $("#UF").val(this.UF);
+                        $("#txtCep").val(this.CEP);
+                        $("#winAddEditEndereco").dialog("open");
+                    })
+                    OnLoadingPanel(false, "");
+                }
+            });
+        }
+    }
+
+    function OnCloseWinAddEditEndereco() {
+        $("#winAddEditEndereco").dialog("close");
+    }
+    
+    function OnAddEditEndereco() {
+        OnLimpaValidacoesForm($("#frmAddEditEndereco"));
+        var FrmValid = true;
+
+        if ($("#txtEndereco").val() == "") {
+            $("span[data-valmsg-for='txtEndereco']").text("Campo obrigatório");
+            $("#txtEndereco").addClass("is-invalid");
+            FrmValid = false;
+        }
+
+        if (FrmValid) {
+            OnLoadingPanel(true, "");
+            $.ajax({
+                url: '@Url.Action("AddEditClienteEndereco")',
+                data: {
+                    IdCliente: IdReg,
+                    IdEndereco: IdEnderecoSel,
+                    Endereco: $("#txtEndereco").val(),
+                    Numero: $("#txtNumero").val(),
+                    Compl: $("#txtCompl").val(),
+                    Bairro: $("#txtBairro").val(),
+                    Cidade: $("#txtCidade").val(),
+                    UF: $("#UF").val(),
+                    Cep: $("#txtCep").val()
+                },
+                success: function (result) {
+                    OnLoad_grClientesEnderecosPartial();
+                    $("#winAddEditEndereco").dialog("close");
+                    OnLoadingPanel(false, "");
+                }
+            });
+        }
+    }
+
+    function OnDeleteClienteEndereco(IdEndereco) {
+        OnConfirmLobibox("Deseja realmente excluir este registro?",
+            function () {
+                OnLoadingPanel(true, "");
+                $.ajax({
+                    url: '@Url.Action("DeleteClienteEndereco")',
+                    data: { IdCliente: IdReg, IdEndereco: IdEndereco },
+                    success: function (result) {
+                        IdEnderecoSel = 0;
+                        OnLoad_grClientesEnderecosPartial();
+                        OnLoadingPanel(false, "");
+                    }
+                })
+            }, null);
+    }
+</script>
+<div id="winAddEditEndereco" title="Endereço" style="display:none">
+    <form id="frmAddEditEndereco">
+        <div class="container">
+            <div class="m-1">
+                <div class="row">
+                    <div class="form-group col-lg-9 col-md-12">
+                        <label for="txtEndereco" class="control-label">Endereço</label>
+                        <input type="text" id="txtEndereco" class="form-control form-control-sm" />
+                        <span data-valmsg-for="txtEndereco" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-12">
+                        <label for="txtNumero" class="control-label">Número</label>
+                        <input type="text" id="txtNumero" class="form-control form-control-sm" />
+                        <span data-valmsg-for="txtNumero" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class="form-group col-lg-6 col-md-12">
+                        <label for="txtCompl" class="control-label">Complemento</label>
+                        <input type="text" id="txtCompl" class="form-control form-control-sm" />
+                        <span data-valmsg-for="txtCompl" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-12">
+                        <label for="txtBairro" class="control-label">Bairro</label>
+                        <input type="text" id="txtBairro" class="form-control form-control-sm" />
+                        <span data-valmsg-for="txtBairro" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class="form-group col-lg-6 col-md-12">
+                        <label for="txtCidade" class="control-label">Cidade</label>
+                        <input type="text" id="txtCidade" class="form-control form-control-sm" />
+                        <span data-valmsg-for="txtCidade" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-6">
+                        <label for="UF" class="control-label">UF</label>
+                        @Html.DropDownList("UF", null, new { @class = "form-control form-select-sm form-select" })
+                        <span data-valmsg-for="UF" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-6">
+                        <label for="txtCep" class="control-label">Cep</label>
+                        <input type="text" id="txtCep" class="form-control form-control-sm cep-field" />
+                        <span data-valmsg-for="txtCep" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class='row m-3 text-center'>
+                <div class='col'>
+                    <button type="button" onclick="OnAddEditEndereco()" class="btn btn-primary-custom">Salvar</button>
+                </div>
+                <div class='col'>
+                    <button type="button" onclick="OnCloseWinAddEditEndereco()" class="btn btn-secondary-custom">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script id="scWinAddEditContato">
+    var IdContatoSel = 0;
+    $(document).ready(function () {
+        $("#winAddEditContato").dialog({
+            autoOpen: false,
+            modal: true,
+            width: 500,
+            resizable: false,
+            draggable: false
+        });
+    })
+
+    function OnShowWinAddEditClienteContato(IdContato) {
+        IdContatoSel = IdContato;
+              
+        if (IdContatoSel == 0) {
+            $("#txtNomeContato").val("");
+            $("#txtFoneContato").val("");
+            $("#txtCelularContato").val("");
+            $("#txtEmailContato").val("");
+            $("#winAddEditContato").dialog("open");
+        }
+        else {
+            OnLoadingPanel(true, "");
+            $.ajax({
+                url: '@Url.Action("GetClienteContato")',
+                data: { IdCliente: IdReg, IdContato: IdContatoSel },
+                success: function (result) {
+                    $("#txtNomeContato").val("");
+                    $("#txtFoneContato").val("");
+                    $("#txtCelularContato").val("");
+                    $("#txtEmailContato").val("");
+
+                    $(result).each(function () {
+                        $("#txtNomeContato").val(this.NOME);
+                        $("#txtFoneContato").val(this.FONE);
+                        $("#txtCelularContato").val(this.CELULAR);
+                        $("#txtEmailContato").val(this.EMAIL);
+                        $("#winAddEditContato").dialog("open");
+                    })
+                    OnLoadingPanel(false, "");
+                }
+            });
+        }
+    }
+
+    function OnCloseWinAddEditContato() {
+        $("#winAddEditContato").dialog("close");
+    }
+
+    function OnAddEditContato() {
+        OnLimpaValidacoesForm($("#frmAddEditContato"));
+        var FrmValid = true;
+
+        if ($("#txtNomeContato").val() == "") {
+            $("span[data-valmsg-for='txtNomeContato']").text("Campo obrigatório");
+            $("#txtNomeContato").addClass("is-invalid");
+            FrmValid = false;
+        }
+
+        if (FrmValid) {
+            OnLoadingPanel(true, "");
+            $.ajax({
+                url: '@Url.Action("AddEditClienteContato")',
+                data: {
+                    IdCliente: IdReg,
+                    IdContato: IdContatoSel,
+                    Nome: $("#txtNomeContato").val(),
+                    Fone: $("#txtFoneContato").val(),
+                    Celular: $("#txtCelularContato").val(),
+                    Email: $("#txtEmailContato").val(),
+                },
+                success: function (result) {
+                    OnLoad_grClientesContatosPartial();
+                    $("#winAddEditContato").dialog("close");
+                    OnLoadingPanel(false, "");
+                }
+            });
+        }
+    }
+
+    function OnDeleteClienteContato(IdContato) {
+        OnConfirmLobibox("Deseja realmente excluir este registro?",
+            function () {
+                OnLoadingPanel(true, "");
+                $.ajax({
+                    url: '@Url.Action("DeleteClienteContato")',
+                    data: { IdCliente: IdReg, IdContato: IdContato },
+                    success: function (result) {
+                        IdContatoSel = 0;
+                        OnLoad_grClientesContatosPartial();
+                        OnLoadingPanel(false, "");
+                    }
+                })
+            }, null);
+    }
+</script>
+<div id="winAddEditContato" title="Contato" style="display:none">
+    <form id="frmAddEditContato">
+        <div class="container">
+            <div class="m-1">
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="txtNomeContato" class="control-label">Nome</label>
+                        <input type="text" id="txtNomeContato" class="form-control form-control-sm" />
+                        <span data-valmsg-for="txtNomeContato" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class="form-group col-lg-6 col-md-12">
+                        <label for="txtFoneContato" class="control-label">Fone</label>
+                        <input type="text" id="txtFoneContato" class="form-control form-control-sm fone-field" />
+                        <span data-valmsg-for="txtFoneContato" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-12">
+                        <label for="txtCelularContato" class="control-label">Celular</label>
+                        <input type="text" id="txtCelularContato" class="form-control form-control-sm fone-field" />
+                        <span data-valmsg-for="txtCelularContato" class="text-danger"></span>
+                    </div>                    
+                </div>
+
+                <div class='row'>
+                    <div class="form-group col">
+                        <label for="txtEmailContato" class="control-label">Email</label>
+                        <input type="text" id="txtEmailContato" class="form-control form-control-sm" />
+                        <span data-valmsg-for="txtEmailContato" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class='row m-3 text-center'>
+                <div class='col'>
+                    <button type="button" onclick="OnAddEditContato()" class="btn btn-primary-custom">Salvar</button>
+                </div>
+                <div class='col'>
+                    <button type="button" onclick="OnCloseWinAddEditContato()" class="btn btn-secondary-custom">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
