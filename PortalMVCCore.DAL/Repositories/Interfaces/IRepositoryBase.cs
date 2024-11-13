@@ -4,11 +4,11 @@ namespace PortalMVCCore.DAL.Repositories.Interfaces
 {
     public interface IRepositoryBase<T> where T : class
     {
-        List<T> GetAll(Expression<Func<T, bool>> filter = null);
-        T FirstOrDefault(Expression<Func<T, bool>> filter = null);
-        T Find(params object[] parametros);
-        T Add(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null);
+        Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter = null);
+        Task<T> FindAsync(params object[] parametros);
+        Task<T> AddAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
     }
 }

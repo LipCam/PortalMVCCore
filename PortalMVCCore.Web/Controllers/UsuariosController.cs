@@ -1,21 +1,21 @@
-using PortalMVCCore.DAL.Entities;
-using PortalMVCCore.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PortalMVCCore.BLL.Services.Interfaces;
+using PortalMVCCore.DAL.Entities;
 
 namespace PortalMVCCore.Web.Controllers
 {
     [Authorize]
     public class UsuariosController : Controller
     {
-        private IUsuariosRepository _repository;
+        private IUsuariosService _service;
 
-        public UsuariosController(IUsuariosRepository repository)
+        public UsuariosController(IUsuariosService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
-        public IActionResult Index(string Mensagem = "")
+        public async Task<IActionResult> Index(string Mensagem = "")
         {
             int.TryParse(User.FindFirst("CodEmpresa")?.Value, out int CodEmpresa);
 
@@ -27,13 +27,13 @@ namespace PortalMVCCore.Web.Controllers
             return View();
         }
 
-        public IActionResult grUsuariosPartial()
+        public async Task<IActionResult> grUsuariosPartial()
         {
-            return Ok(_repository.GetAll());
+            return Ok(await _service.GetAll());
         }
 
         [Route("Usuarios/Usuario")]
-        public IActionResult frmUsuarios(int Id = 0)
+        public async Task<IActionResult> frmUsuarios(int Id = 0)
         {
             ViewBag.id = Id;
 
@@ -41,7 +41,7 @@ namespace PortalMVCCore.Web.Controllers
                 return View();
             else
             {
-                USUARIOS_TAB usuarios_tab = _repository.Find(Id);
+                USUARIOS_TAB usuarios_tab = await _service.Find(Id);
 
                 if (usuarios_tab != null)
                 {
@@ -55,15 +55,12 @@ namespace PortalMVCCore.Web.Controllers
         [HttpPost]
         [Route("Usuarios/Usuario")]
         [ValidateAntiForgeryToken]
-        public IActionResult frmUsuarios(int Id, USUARIOS_TAB usuarios_tab, bool NovoReg = false)
+        public async Task<IActionResult> frmUsuarios(int Id, USUARIOS_TAB usuarios_tab, bool NovoReg = false)
         {
             if (Id == 0)
-            {
-                usuarios_tab.ID_USUARIO = _repository.GetAll().Count() > 0 ? _repository.GetAll().Max(p => p.ID_USUARIO) + 1 : 1;
-                _repository.Add(usuarios_tab);
-            }
+                await _service.Add(usuarios_tab);
             else
-                _repository.Update(usuarios_tab);
+                await _service.Update(usuarios_tab);
 
             Id = usuarios_tab.ID_USUARIO;
             if (NovoReg)
@@ -72,10 +69,9 @@ namespace PortalMVCCore.Web.Controllers
             return RedirectToAction("frmUsuarios", new { Id = Id });
         }
 
-        public void Delete(int Id)
+        public async Task Delete(int Id)
         {
-            USUARIOS_TAB usuarios_tab = _repository.Find(Id);
-            _repository.Delete(usuarios_tab);
+            await _service.Delete(Id);
         }
     }
 }

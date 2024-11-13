@@ -14,7 +14,7 @@ namespace PortalMVCCore.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public List<T> GetAll(Expression<Func<T, bool>> filter = null)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
         {
             IQueryable<T> query = _dbContext.Set<T>();
 
@@ -26,48 +26,48 @@ namespace PortalMVCCore.DAL.Repositories
             return query.ToList();
         }
 
-        public T FirstOrDefault(Expression<Func<T, bool>> filter = null)
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter = null)
         {
-            return _dbContext.Set<T>().FirstOrDefault(filter);
+            return await _dbContext.Set<T>().FirstOrDefaultAsync(filter);
         }
 
-        public T Find(params object[] keyValues)
+        public async Task<T> FindAsync(params object[] keyValues)
         {
-            return _dbContext.Set<T>().Find(keyValues);
+            return await _dbContext.Set<T>().FindAsync(keyValues);
         }
 
-        public T Add(T entity)
+        public async Task<T> AddAsync(T entity)
         {
             if (entity != null)
             {
-                _dbContext.Set<T>().Add(entity);
-                _dbContext.SaveChanges();
+                await _dbContext.Set<T>().AddAsync(entity);
+                await SaveChanges();
             }
 
             return entity;
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             if (entity != null)
             {
                 _dbContext.Entry(entity).State = EntityState.Modified;
-                _dbContext.SaveChanges();
+                await SaveChanges();
             }
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             if (entity != null)
             {
                 _dbContext.Set<T>().Remove(entity);
-                _dbContext.SaveChanges();
+                await SaveChanges();
             }
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

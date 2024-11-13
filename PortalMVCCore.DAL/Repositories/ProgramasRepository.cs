@@ -13,9 +13,9 @@ namespace PortalMVCCore.DAL.Repositories
             _repositoryBase = repositoryBase;
         }
 
-        public List<PROGRAMAS_TAB> GetAll(Expression<Func<PROGRAMAS_TAB, bool>> filter)
+        public async Task<PROGRAMAS_TAB> FirstOrDefaultAsync(Expression<Func<PROGRAMAS_TAB, bool>> filter)
         {
-            return _repositoryBase.GetAll(filter);
+            return await _repositoryBase.FirstOrDefaultAsync(filter);
         }
     }
 }

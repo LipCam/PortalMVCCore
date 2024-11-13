@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PortalMVCCore.DAL.DB;
 using PortalMVCCore.DAL.Entities.Clientes;
@@ -22,29 +23,41 @@ namespace PortalMVCCore.DAL.Repositories
             _clienteContatosRepositoryBase = clienteContatossRepositoryBase;
         }
 
-        public void Delete(int IdCliente)
+        public async Task DeleteAsync(int IdCliente)
         {
-            CLIENTES_TAB? clientes_tab = _dbContext.CLIENTES_TAB.Find(IdCliente);
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
-            if(clientes_tab != null)
+            try
             {
-                IQueryable<CLIENTES_ENDERECOS_TAB> CliEnd = _dbContext.CLIENTES_ENDERECOS_TAB.Where(p => p.ID_CLIENTE == IdCliente);
-                _dbContext.CLIENTES_ENDERECOS_TAB.RemoveRange(CliEnd);
-                _dbContext.SaveChanges();
+                CLIENTES_TAB? clientes_tab = await _dbContext.CLIENTES_TAB.FindAsync(IdCliente);
 
-                IQueryable<CLIENTES_CONTATOS_TAB> CliContato = _dbContext.CLIENTES_CONTATOS_TAB.Where(p => p.ID_CLIENTE == IdCliente);
-                _dbContext.CLIENTES_CONTATOS_TAB.RemoveRange(CliContato);
-                _dbContext.SaveChanges();
+                if (clientes_tab != null)
+                {
+                    IQueryable<CLIENTES_ENDERECOS_TAB> CliEnd = _dbContext.CLIENTES_ENDERECOS_TAB.Where(p => p.ID_CLIENTE == IdCliente).AsNoTracking();
+                    _dbContext.CLIENTES_ENDERECOS_TAB.RemoveRange(CliEnd);
+                    await _dbContext.SaveChangesAsync();
 
-                _dbContext.CLIENTES_TAB.Remove(clientes_tab);
-                _dbContext.SaveChanges();
+                    IQueryable<CLIENTES_CONTATOS_TAB> CliContato = _dbContext.CLIENTES_CONTATOS_TAB.Where(p => p.ID_CLIENTE == IdCliente).AsNoTracking();
+                    _dbContext.CLIENTES_CONTATOS_TAB.RemoveRange(CliContato);
+                    await _dbContext.SaveChangesAsync();
+
+                    _dbContext.CLIENTES_TAB.Remove(clientes_tab);
+                    await _dbContext.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                }
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync(); 
+                throw;
             }
         }
 
         #region ----- Endereços -----
-        public CLIENTES_ENDERECOS_TAB? FindClienteEndereco(int IdCliente, int IdEndereco)
+        public async Task<CLIENTES_ENDERECOS_TAB?> FindClienteEndereco(int IdCliente, int IdEndereco)
         {
-            return _dbContext.CLIENTES_ENDERECOS_TAB.Find(IdCliente, IdEndereco);
+            return await _dbContext.CLIENTES_ENDERECOS_TAB.FindAsync(IdCliente, IdEndereco);
         }
 
         public DataTable GetClienteEndereco(int IdCliente, int IdEndereco)
@@ -64,28 +77,28 @@ namespace PortalMVCCore.DAL.Repositories
             return dt;
         }
 
-        public void AddClienteEndereco(CLIENTES_ENDERECOS_TAB clientes_enderecos_tab)
+        public async Task AddClienteEndereco(CLIENTES_ENDERECOS_TAB clientes_enderecos_tab)
         {
-            var Enderecos = _clienteEnderecosRepositoryBase.GetAll(p => p.ID_CLIENTE == clientes_enderecos_tab.ID_CLIENTE);
+            var Enderecos = await _clienteEnderecosRepositoryBase.GetAllAsync(p => p.ID_CLIENTE == clientes_enderecos_tab.ID_CLIENTE);
             clientes_enderecos_tab.ID_ENDERECO = Enderecos.Count > 0 ? Enderecos.Max(p=> p.ID_ENDERECO) + 1 : 1;
-            _clienteEnderecosRepositoryBase.Add(clientes_enderecos_tab);
+            await _clienteEnderecosRepositoryBase.AddAsync(clientes_enderecos_tab);
         }
 
-        public void UpdateClienteEndereco(CLIENTES_ENDERECOS_TAB clientes_enderecos_tab)
+        public async Task UpdateClienteEndereco(CLIENTES_ENDERECOS_TAB clientes_enderecos_tab)
         {
-            _clienteEnderecosRepositoryBase.Update(clientes_enderecos_tab);
+            await _clienteEnderecosRepositoryBase.UpdateAsync(clientes_enderecos_tab);
         }
 
-        public void DeleteClienteEndereco(CLIENTES_ENDERECOS_TAB clientes_enderecos_tab)
+        public async Task DeleteClienteEndereco(CLIENTES_ENDERECOS_TAB clientes_enderecos_tab)
         {
-            _clienteEnderecosRepositoryBase.Delete(clientes_enderecos_tab);
+            await _clienteEnderecosRepositoryBase.DeleteAsync(clientes_enderecos_tab);
         }
         #endregion
 
         #region ----- Contatos -----
-        public CLIENTES_CONTATOS_TAB? FindClienteContato(int IdCliente, int CodContato)
+        public async Task<CLIENTES_CONTATOS_TAB?> FindClienteContato(int IdCliente, int CodContato)
         {
-            return _dbContext.CLIENTES_CONTATOS_TAB.Find(IdCliente, CodContato);
+            return await _dbContext.CLIENTES_CONTATOS_TAB.FindAsync(IdCliente, CodContato);
         }
 
         public DataTable GetClienteContato(int IdCliente, int IdContato)
@@ -105,21 +118,21 @@ namespace PortalMVCCore.DAL.Repositories
             return dt;
         }
 
-        public void AddClienteContato(CLIENTES_CONTATOS_TAB clientes_contatos_tab)
+        public async Task AddClienteContato(CLIENTES_CONTATOS_TAB clientes_contatos_tab)
         {
-            var Contatos = _clienteContatosRepositoryBase.GetAll(p => p.ID_CLIENTE == clientes_contatos_tab.ID_CLIENTE);
+            var Contatos = await _clienteContatosRepositoryBase.GetAllAsync(p => p.ID_CLIENTE == clientes_contatos_tab.ID_CLIENTE);
             clientes_contatos_tab.ID_CONTATO = Contatos.Count > 0 ? Contatos.Max(p => p.ID_CONTATO) + 1 : 1;
-            _clienteContatosRepositoryBase.Add(clientes_contatos_tab);
+            await _clienteContatosRepositoryBase.AddAsync(clientes_contatos_tab);
         }
 
-        public void UpdateClienteContato(CLIENTES_CONTATOS_TAB clientes_contatos_tab)
+        public async Task UpdateClienteContato(CLIENTES_CONTATOS_TAB clientes_contatos_tab)
         {
-            _clienteContatosRepositoryBase.Update(clientes_contatos_tab);
+            await _clienteContatosRepositoryBase.UpdateAsync(clientes_contatos_tab);
         }
 
-        public void DeleteClienteContato(CLIENTES_CONTATOS_TAB clientes_contatos_tab)
+        public async Task DeleteClienteContato(CLIENTES_CONTATOS_TAB clientes_contatos_tab)
         {
-            _clienteContatosRepositoryBase.Delete(clientes_contatos_tab);
+            await _clienteContatosRepositoryBase.DeleteAsync(clientes_contatos_tab);
         }
         #endregion
     }

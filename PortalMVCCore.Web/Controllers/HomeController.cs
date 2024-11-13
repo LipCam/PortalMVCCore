@@ -1,22 +1,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PortalMVCCore.DAL.Entities;
-using PortalMVCCore.DAL.Repositories.Interfaces;
+using PortalMVCCore.BLL.Services.Interfaces;
+using PortalMVCCore.DAL.DTOs;
 
 namespace PortalMVCCore.Web.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private IHomeRepository _homeRepository;
-        private IUsuariosRepository _usuariosRepository;
-        private IProgramasRepository _programasRepository;
+        private IHomeService _homeService;
 
-        public HomeController(IHomeRepository homeRepository, IUsuariosRepository usuariosRepository, IProgramasRepository programasRepository)
+        public HomeController(IHomeService homeService)
         {
-            _homeRepository = homeRepository;
-            _usuariosRepository = usuariosRepository;
-            _programasRepository = programasRepository;
+            _homeService = homeService;
         }
 
         public IActionResult Index()
@@ -24,42 +20,19 @@ namespace PortalMVCCore.Web.Controllers
             return View();
         }
 
-        public class DadosHeader
+        public async Task<IActionResult> GetDadosHeader(string NomeController = "")
         {
-            public string? IdUsuario { get; set; }
-            public string? Usuario { get; set; }
-            public string? Empresa { get; set; }
-            public string? NomeController { get; set; }
-            public string? DescricaoController { get; set; }
-            public int IdTipoLogin { get; set; }
-            public int IntervNotific { get; set; }
-        }
-
-        public IActionResult GetDadosHeader(string NomeController = "")
-        {
-            DadosHeader Dados = new DadosHeader();
             int.TryParse(User.FindFirst("IdUsuario")?.Value, out int IdUsuario);
             int.TryParse(User.FindFirst("IdTipoLogin")?.Value, out int IdTipoLogin);
 
-            Dados.IdUsuario = IdUsuario.ToString();
-            Dados.Usuario = "";
-
-            USUARIOS_TAB usuarios_tab = _usuariosRepository.Find(IdUsuario);
-
-            if (usuarios_tab != null)
-                Dados.Usuario = usuarios_tab.NOME.Count() <= 26 ? usuarios_tab.NOME : usuarios_tab.NOME.Substring(0, 26);
-
-            PROGRAMAS_TAB programas_tab = _programasRepository.GetAll(p => p.NOME_CONTROLLER == NomeController).FirstOrDefault();
-            Dados.DescricaoController = programas_tab != null ? programas_tab.DESCRICAO : "";
-
-            Dados.IdTipoLogin = IdTipoLogin;
+            DadosHeaderDTO Dados = await _homeService.GetDadosHeader(NomeController, IdUsuario, IdTipoLogin);
 
             return Json(Dados);
         }
 
         public IActionResult GetDashboard()
         {
-            return Json(_homeRepository.GetDashBoard());
+            return Json(_homeService.GetDashBoard());
         }
     }
 }

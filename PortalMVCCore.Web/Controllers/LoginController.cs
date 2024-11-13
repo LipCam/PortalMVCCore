@@ -2,19 +2,19 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PortalMVCCore.BLL.Services.Interfaces;
 using PortalMVCCore.DAL.Entities;
-using PortalMVCCore.DAL.Repositories.Interfaces;
 using System.Security.Claims;
 
 namespace PortalMVCCore.Controllers
 {
     public class LoginController : Controller
     {
-        private IUsuariosRepository _usuariosRepository;
+        private IUsuariosService _usuariosService;
 
-        public LoginController(IUsuariosRepository usuariosRepository)
+        public LoginController(IUsuariosService usuariosService)
         {
-            _usuariosRepository = usuariosRepository;
+            _usuariosService = usuariosService;
         }
 
         public class TipoLogin
@@ -50,7 +50,7 @@ namespace PortalMVCCore.Controllers
 
             if (Erro == "")
             {
-                usuarios_tab = _usuariosRepository.FirstOrDefault(p => p.USUARIO == usuarios_tab.USUARIO && p.SENHA == usuarios_tab.SENHA);
+                usuarios_tab = await _usuariosService.FirstOrDefault(p => p.USUARIO == usuarios_tab.USUARIO && p.SENHA == usuarios_tab.SENHA);
                 if (usuarios_tab != null)
                 {
                     List<Claim> claims = new List<Claim>()

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PortalMVCCore.BLL.Services.Interfaces;
 using PortalMVCCore.DAL.Entities.Clientes;
-using PortalMVCCore.DAL.Repositories.Interfaces;
 using PortalMVCCore.Web.Classes.Utilitarios;
 using System.Data;
 
@@ -11,11 +11,11 @@ namespace PortalMVCCore.Controllers
     [Authorize]
     public class ClientesController : Controller
     {
-        private IClientesRepository _repository;
+        private IClientesService _service;
 
-        public ClientesController(IClientesRepository repository)
+        public ClientesController(IClientesService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         [Route("Clientes")]
@@ -27,9 +27,9 @@ namespace PortalMVCCore.Controllers
             return View();
         }
 
-        public IActionResult grClientesPartial()
+        public async Task<IActionResult> grClientesPartial()
         {
-            return Ok(_repository.GetAll());
+            return Ok(await _service.GetAll());
         }
 
         public void CarregaSelectLists(CLIENTES_TAB clientes_tab)
@@ -39,7 +39,7 @@ namespace PortalMVCCore.Controllers
         }
 
         [Route("Clientes/Cliente")]
-        public IActionResult frmClientes(int Id = 0)
+        public async Task<IActionResult> frmClientes(int Id = 0)
         {
             ViewBag.Id = Id;
             if (Id == 0)
@@ -49,7 +49,7 @@ namespace PortalMVCCore.Controllers
             }
             else
             {
-                CLIENTES_TAB? clientes_tab = _repository.Find(Id);
+                CLIENTES_TAB? clientes_tab = await _service.Find(Id);
 
                 if (clientes_tab != null)
                 {
@@ -64,12 +64,12 @@ namespace PortalMVCCore.Controllers
         [HttpPost]
         [Route("Clientes/Cliente")]
         [ValidateAntiForgeryToken]
-        public IActionResult frmClientes(int Id, CLIENTES_TAB clientes_tab, bool NovoReg = false)
+        public async Task<IActionResult> frmClientes(int Id, CLIENTES_TAB clientes_tab, bool NovoReg = false)
         {
             if (Id == 0)
-                _repository.Add(clientes_tab);
+                await _service.Add(clientes_tab);
             else
-                _repository.Update(clientes_tab);
+                await _service.Update(clientes_tab);
             //ViewBag.id = id;
             //ViewBag.Salvo = true;
             //return View(clientes_tab);
@@ -81,59 +81,32 @@ namespace PortalMVCCore.Controllers
             return RedirectToAction("frmClientes", new { Id = Id });
         }
 
-        public void Delete(int Id)
+        public async Task Delete(int Id)
         {
-            _repository.Delete(Id);
+            await _service.Delete(Id);
         }
 
         #region ----- Endereços -----
         public IActionResult grClientesEnderecosPartial(int IdCliente)
         {
-            DataTable dt = _repository.GetClienteEndereco(IdCliente, -1);
+            DataTable dt = _service.GetClienteEndereco(IdCliente, -1);
             return Ok(new ConvertDictionary().GetTableRows(dt));
         }
 
-        public void AddEditClienteEndereco(int IdCliente = 0, int IdEndereco = 0, string Endereco = "", string Numero = "", string Compl = "",
+        public async Task AddEditClienteEndereco(int IdCliente = 0, int IdEndereco = 0, string Endereco = "", string Numero = "", string Compl = "",
             string Bairro = "", string Cidade = "", string UF = "", string Cep = "")
         {
-            CLIENTES_ENDERECOS_TAB? clientes_enderecos_tab = _repository.FindClienteEndereco(IdCliente, IdEndereco);
-
-            if (clientes_enderecos_tab == null)
-            {
-                clientes_enderecos_tab = new CLIENTES_ENDERECOS_TAB()
-                {
-                    ID_CLIENTE = IdCliente,
-                    ENDERECO = Endereco,
-                    NUMERO = Numero,
-                    COMPL = Compl,
-                    BAIRRO = Bairro,
-                    CIDADE = Cidade,
-                    UF = UF,
-                    CEP = Cep.Replace("-", "").Replace(".", "")
-                };
-                _repository.AddClienteEndereco(clientes_enderecos_tab);
-            }
-            else
-            {
-                clientes_enderecos_tab.ENDERECO = Endereco;
-                clientes_enderecos_tab.NUMERO = Numero;
-                clientes_enderecos_tab.COMPL = Compl;
-                clientes_enderecos_tab.BAIRRO = Bairro;
-                clientes_enderecos_tab.CIDADE = Cidade;
-                clientes_enderecos_tab.UF = UF;
-                clientes_enderecos_tab.CEP = Cep.Replace("-", "").Replace(".", "");
-                _repository.UpdateClienteEndereco(clientes_enderecos_tab);
-            }
+            await _service.AddEditClienteEndereco(IdCliente, IdEndereco, Endereco, Numero, Compl, Bairro, Cidade, UF, Cep);
         }
 
-        public void DeleteClienteEndereco(int IdCliente= 0, int IdEndereco = 0)
+        public async Task DeleteClienteEndereco(int IdCliente= 0, int IdEndereco = 0)
         {
-            _repository.DeleteClienteEndereco(_repository.FindClienteEndereco(IdCliente, IdEndereco));
+            await _service.DeleteClienteEndereco(IdCliente, IdEndereco);
         }
 
         public IActionResult GetClienteEndereco(int IdCliente = 0, int IdEndereco = 0)
         {
-            DataTable dt = _repository.GetClienteEndereco(IdCliente, IdEndereco);
+            DataTable dt = _service.GetClienteEndereco(IdCliente, IdEndereco);
             return Ok(new ConvertDictionary().GetTableRows(dt));
         }
         #endregion
@@ -141,59 +114,38 @@ namespace PortalMVCCore.Controllers
         #region ----- Contatos -----
         public IActionResult grClientesContatosPartial(int IdCliente)
         {
-            DataTable dt = _repository.GetClienteContato(IdCliente, -1);
+            DataTable dt = _service.GetClienteContato(IdCliente, -1);
             return Ok(new ConvertDictionary().GetTableRows(dt));
         }
 
-        public void AddEditClienteContato(int IdCliente = 0, int IdContato = 0, string Nome = "", string Fone = "", string Celular = "", string Email = "")
+        public async Task AddEditClienteContato(int IdCliente = 0, int IdContato = 0, string Nome = "", string Fone = "", string Celular = "", string Email = "")
         {
-            CLIENTES_CONTATOS_TAB? clientes_contatos_tab = _repository.FindClienteContato(IdCliente, IdContato);
-
-            if (clientes_contatos_tab == null)
-            {
-                clientes_contatos_tab = new CLIENTES_CONTATOS_TAB()
-                {
-                    ID_CLIENTE = IdCliente,
-                    NOME = Nome,
-                    FONE = Fone,
-                    CELULAR = Celular,
-                    EMAIL = Email
-                };
-                _repository.AddClienteContato(clientes_contatos_tab);
-            }
-            else
-            {
-                clientes_contatos_tab.NOME = Nome;
-                clientes_contatos_tab.FONE = Fone;
-                clientes_contatos_tab.CELULAR = Celular;
-                clientes_contatos_tab.EMAIL = Email;
-                _repository.UpdateClienteContato(clientes_contatos_tab);
-            }
+            await _service.AddEditClienteContato(IdCliente, IdContato, Nome, Fone, Celular, Email);
         }
 
-        public void DeleteClienteContato(int IdCliente = 0, int IdContato = 0)
+        public async Task DeleteClienteContato(int IdCliente = 0, int IdContato = 0)
         {
-            _repository.DeleteClienteContato(_repository.FindClienteContato(IdCliente, IdContato));
+            await _service.DeleteClienteContato(IdCliente, IdContato);
         }
 
         public IActionResult GetClienteContato(int IdCliente = 0, int IdContato = 0)
         {
-            DataTable dt = _repository.GetClienteContato(IdCliente, IdContato);
+            DataTable dt = _service.GetClienteContato(IdCliente, IdContato);
             return Ok(new ConvertDictionary().GetTableRows(dt));
         }
         #endregion
 
-        public IActionResult grPesqClientesPartial()
+        public async Task<IActionResult> grPesqClientesPartial()
         {
-            return Ok(_repository.GetAll());
+            return Ok(await _service.GetAll());
         }
 
-        public IActionResult GetCliente(int Id = 0, string Descricao = "")
+        public async Task<IActionResult> GetCliente(int Id = 0, string Descricao = "")
         {
             if (Id == 0 && Descricao == "")
                 return Ok();
 
-            return Ok(_repository.GetAll(p => (Id == 0 || p.ID_CLIENTE == Id) && (Descricao == "" || p.NOME.Contains(Descricao))));
+            return Ok(await _service.GetAll(p => (Id == 0 || p.ID_CLIENTE == Id) && (Descricao == "" || p.NOME.Contains(Descricao))));
         }
     }
 }

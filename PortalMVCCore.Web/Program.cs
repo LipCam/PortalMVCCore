@@ -4,6 +4,8 @@ using PortalMVCCore.DAL.Repositories.Interfaces;
 using PortalMVCCore.DAL.Repositories;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using PortalMVCCore.BLL.Services;
+using PortalMVCCore.BLL.Services.Interfaces;
 
 namespace PortalMVCCore.Web
 {
@@ -20,6 +22,10 @@ namespace PortalMVCCore.Web
             builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
             builder.Services.AddScoped<IProgramasRepository, ProgramasRepository>();
             builder.Services.AddScoped<IClientesRepository, ClientesRepository>();
+
+            builder.Services.AddScoped<IHomeService, HomeService>();
+            builder.Services.AddScoped<IUsuariosService, UsuariosService>();
+            builder.Services.AddScoped<IClientesService, ClientesService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
