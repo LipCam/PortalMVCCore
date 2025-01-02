@@ -23,7 +23,7 @@ namespace PortalMVCCore.DAL.Repositories
                 query = query.Where(filter);
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter = null)

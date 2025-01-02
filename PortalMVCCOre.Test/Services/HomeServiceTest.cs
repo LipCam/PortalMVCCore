@@ -1,5 +1,6 @@
 ﻿using Moq;
 using PortalMVCCore.BLL.Services;
+using PortalMVCCore.BLL.Services.Interfaces;
 using PortalMVCCore.DAL.DTOs;
 using PortalMVCCore.DAL.Entities;
 using PortalMVCCore.DAL.Repositories.Interfaces;
@@ -7,14 +8,14 @@ using System.Linq.Expressions;
 
 namespace PortalMVCCore.Test
 {
-    public class HomeTest
+    public class HomeServiceTest
     {
         [Fact]
         public void GetDashBoard_OK()
         {
             //Arrange
             Mock<IHomeRepository> repository = new Mock<IHomeRepository>();
-            HomeService homeServices = new HomeService(repository.Object, null, null);
+            IHomeService homeServices = new HomeService(repository.Object, null, null);
 
             List<DadosDashBoardDTO> lst = new List<DadosDashBoardDTO>()
             {

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PortalMVCCore.BLL\PortalMVCCore.BLL.csproj" />
-    <ProjectReference Include="..\PortalMVCCore.DAL\PortalMVCCore.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

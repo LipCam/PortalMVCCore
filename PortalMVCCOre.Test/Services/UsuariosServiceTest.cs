@@ -3,17 +3,16 @@ using PortalMVCCore.BLL.Services;
 using PortalMVCCore.BLL.Services.Interfaces;
 using PortalMVCCore.DAL.Entities;
 using PortalMVCCore.DAL.Repositories.Interfaces;
-using System.Reflection;
 
-namespace PortalMVCCore.Test
+namespace PortalMVCCore.Test.Services
 {
-    public class UsuariosTest
+    public class UsuariosServiceTest
     {
         private Mock<IUsuariosRepository> _usuariosRepositoryMock;
         private IUsuariosService _usuariosService;
 
-        
-        public UsuariosTest()
+
+        public UsuariosServiceTest()
         {
             _usuariosRepositoryMock = new Mock<IUsuariosRepository>();
             _usuariosService = new UsuariosService(_usuariosRepositoryMock.Object);
@@ -25,12 +24,12 @@ namespace PortalMVCCore.Test
             //Arrange
             string Usuario = "usuario";
             string Senha = "123";
-            
+
             _usuariosRepositoryMock.Setup(p => p.FirstOrDefaultAsync(p => p.USUARIO == Usuario && p.SENHA == Senha))
                 .ReturnsAsync(new USUARIOS_TAB() { USUARIO = "usuario", SENHA = "123" });
 
             //Act
-            var result = await _usuariosService.FirstOrDefault(p=> p.USUARIO == Usuario && p.SENHA == Senha);
+            var result = await _usuariosService.FirstOrDefault(p => p.USUARIO == Usuario && p.SENHA == Senha);
 
             //Assert
             Assert.NotNull(result);

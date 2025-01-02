@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PortalMVCCore.BLL.Services.Interfaces;
 using PortalMVCCore.DAL.Entities;
+using PortalMVCCore.DAL.Repositories.Interfaces;
 using System.Security.Claims;
 
 namespace PortalMVCCore.Controllers
@@ -11,10 +12,16 @@ namespace PortalMVCCore.Controllers
     public class LoginController : Controller
     {
         private IUsuariosService _usuariosService;
+        private IUsuariosRepository @object;
 
         public LoginController(IUsuariosService usuariosService)
         {
             _usuariosService = usuariosService;
+        }
+
+        public LoginController(IUsuariosRepository @object)
+        {
+            this.@object = @object;
         }
 
         public class TipoLogin
